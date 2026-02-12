@@ -1,0 +1,31 @@
+services:
+  webhook:
+    build: ./webhook
+    container_name: clawbot-webhook
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./scripts:/app/scripts:ro
+      - ${CLAWBOT_DATA_DIR:-./data}:/data
+    environment:
+      - STRIPE_SECRET_KEY
+      - STRIPE_WEBHOOK_SECRET
+      - STRIPE_PRICE_ID
+      - CLOUDFLARE_API_TOKEN
+      - CLOUDFLARE_ZONE_ID
+      - CLOUDFLARE_ACCOUNT_ID
+      - BASE_DOMAIN=${BASE_DOMAIN:-reptar.ai}
+      - SERVER_IP
+      - CLAWBOT_DATA_DIR=/data
+      - IMAGE=${IMAGE:-clawbot-desktop:latest}
+      - ADMIN_API_KEY
+    networks:
+      - clawbot
+    labels:
+      caddy: admin.${BASE_DOMAIN:-reptar.ai}
+      caddy.reverse_proxy: "{{upstreams 5000}}"
+
+networks:
+  clawbot:
+    name: clawbot_net
+    external: true

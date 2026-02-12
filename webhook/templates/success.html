@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to ClawBot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-white min-h-screen flex items-center justify-center">
+  <div class="max-w-md w-full mx-4">
+    <div class="bg-gray-900 rounded-xl p-6 shadow-lg border border-gray-800">
+
+      <div id="loading" class="text-center py-8">
+        <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-gray-400">Setting up your desktop...</p>
+        <p class="text-gray-500 text-sm mt-2">This usually takes about 30 seconds.</p>
+      </div>
+
+      <div id="ready" class="hidden">
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center w-12 h-12 bg-green-900 rounded-full mb-3">
+            <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h1 class="text-2xl font-bold">Your desktop is ready</h1>
+        </div>
+
+        <div class="space-y-4 mb-6">
+          <div>
+            <p class="text-sm text-gray-400 mb-1">Desktop URL</p>
+            <p class="bg-gray-800 rounded-lg px-4 py-2 font-mono text-sm break-all">
+              <a href="https://{{ subdomain }}.{{ base_domain }}" target="_blank"
+                 class="text-blue-400 hover:text-blue-300">
+                https://{{ subdomain }}.{{ base_domain }}
+              </a>
+            </p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-400 mb-1">Sign in with</p>
+            <p class="bg-gray-800 rounded-lg px-4 py-2 text-sm text-gray-300">
+              {{ email }}
+            </p>
+          </div>
+        </div>
+
+        <p class="text-gray-400 text-sm mb-4">
+          Bookmark your desktop URL. When you visit it, you'll be asked to sign in
+          with your Google account — only your email has access.
+        </p>
+
+        <a href="https://{{ subdomain }}.{{ base_domain }}" target="_blank"
+           class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold
+                  py-3 px-4 rounded-lg transition-colors text-center">
+          Open Desktop
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const loading = document.getElementById('loading');
+    const ready = document.getElementById('ready');
+
+    {% if customer and subdomain %}
+    async function poll() {
+      try {
+        const res = await fetch(`/api/status/{{ subdomain }}`);
+        const data = await res.json();
+        if (data.ready) {
+          loading.classList.add('hidden');
+          ready.classList.remove('hidden');
+          return;
+        }
+      } catch {}
+      setTimeout(poll, 3000);
+    }
+    poll();
+    {% elif email %}
+    // Webhook may not have fired yet — poll until the customer record appears
+    async function pollProvisioning() {
+      try {
+        // Reload the page to pick up the customer record once provisioning completes
+        const res = await fetch(window.location.href, { headers: { 'Accept': 'text/html' } });
+        const text = await res.text();
+        if (text.includes('id="ready"') && !text.includes('class="hidden">\n        <div class="text-center mb-6">')) {
+          location.reload();
+          return;
+        }
+      } catch {}
+      setTimeout(pollProvisioning, 3000);
+    }
+    setTimeout(pollProvisioning, 5000);
+    {% endif %}
+  </script>
+</body>
+</html>

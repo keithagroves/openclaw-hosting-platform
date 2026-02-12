@@ -1,0 +1,79 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - jq
+  - git
+  - unattended-upgrades
+
+write_files:
+  - path: /opt/clawbot/.env
+    permissions: "0600"
+    content: |
+      BASE_DOMAIN=${base_domain}
+      SERVER_IP=__SERVER_IP__
+      CLOUDFLARE_API_TOKEN=${cloudflare_api_token}
+      CLOUDFLARE_ZONE_ID=${cloudflare_zone_id}
+      CLOUDFLARE_ACCOUNT_ID=${cloudflare_account_id}
+      ADMIN_API_KEY=${admin_api_key}
+      IMAGE=clawbot-desktop:latest
+      CPUS=1
+      MEMORY=2g
+      SHM_SIZE=1g
+      CLAWBOT_DATA_DIR=/opt/clawbot/data
+      BACKUP_DIR=/opt/clawbot/data/backups
+      BACKUP_RETENTION_DAYS=7
+
+  - path: /etc/cron.d/clawbot-backup
+    permissions: "0644"
+    content: |
+      0 3 * * * root cd /opt/clawbot && /opt/clawbot/scripts/backup_all.sh >> /var/log/clawbot-backup.log 2>&1
+
+runcmd:
+  # ── Install Docker ───────────────────────────────────────────────────────────
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" > /etc/apt/sources.list.d/docker.list
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+  # ── Clone repo ───────────────────────────────────────────────────────────────
+  - git clone https://github.com/keithgroves/clawbot-hosting.git /opt/clawbot/repo
+  - ln -sf /opt/clawbot/repo/scripts /opt/clawbot/scripts
+  - ln -sf /opt/clawbot/repo/webhook /opt/clawbot/webhook
+  - ln -sf /opt/clawbot/repo/docker-compose.caddy.yml /opt/clawbot/docker-compose.caddy.yml
+  - ln -sf /opt/clawbot/repo/docker-compose.webhook.yml /opt/clawbot/docker-compose.webhook.yml
+  - chmod +x /opt/clawbot/scripts/*.sh /opt/clawbot/scripts/clawbot-admin /opt/clawbot/scripts/lib/*.sh
+
+  # ── Patch .env with actual server IP ─────────────────────────────────────────
+  - |
+    SERVER_IP=$(curl -s http://169.254.169.254/hetzner/v1/metadata/public-ipv4)
+    sed -i "s/__SERVER_IP__/$SERVER_IP/" /opt/clawbot/.env
+
+  # ── Create data directory ────────────────────────────────────────────────────
+  - mkdir -p /opt/clawbot/data/backups
+
+  # ── Build clawbot-desktop image ──────────────────────────────────────────────
+  - docker build -t clawbot-desktop:latest /opt/clawbot/repo
+
+  # ── Create shared network ───────────────────────────────────────────────────
+  - docker network create clawbot_net || true
+
+  # ── Start Caddy reverse proxy ───────────────────────────────────────────────
+  - |
+    cd /opt/clawbot
+    docker compose -f docker-compose.caddy.yml --env-file .env up -d
+
+  # ── Build & start webhook service ───────────────────────────────────────────
+  - |
+    cd /opt/clawbot
+    docker compose -f docker-compose.webhook.yml --env-file .env up -d --build
+
+  # ── Log completion ──────────────────────────────────────────────────────────
+  - echo "$(date): Clawbot server bootstrap complete" >> /var/log/clawbot-setup.log

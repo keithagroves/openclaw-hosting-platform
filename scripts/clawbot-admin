@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+# ClawBot admin CLI
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/lib/db.sh"
+
+usage() {
+  cat <<EOF
+Usage: clawbot-admin <command> [options]
+
+Commands:
+  provision <subdomain> [password]   Provision a new customer
+  deprovision <subdomain>            Remove a customer
+  deprovision --keep-data <sub>      Remove container but keep volume
+  list [--status active|all]         List customers
+  backup [--all]                     Run volume backups
+  update [image:tag]                 Rolling update all containers
+  status [subdomain]                 Show container health/resource usage
+  db-get <subdomain>                 Show customer database record
+  help                               Show this help
+EOF
+}
+
+cmd_provision() {
+  exec "${SCRIPT_DIR}/provision_customer.sh" "$@"
+}
+
+cmd_deprovision() {
+  exec "${SCRIPT_DIR}/deprovision_customer.sh" "$@"
+}
+
+cmd_list() {
+  local status_filter=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --status) status_filter="$2"; shift 2 ;;
+      *)        shift ;;
+    esac
+  done
+
+  db_init
+
+  if [ "$status_filter" = "all" ] || [ -z "$status_filter" ]; then
+    status_filter=""
+  fi
+
+  local customers
+  customers=$(db_list_customers "$status_filter")
+  local count
+  count=$(echo "$customers" | jq 'length')
+
+  if [ "$count" -eq 0 ]; then
+    echo "No customers found."
+    return
+  fi
+
+  printf "%-20s %-15s %-25s %s\n" "SUBDOMAIN" "STATUS" "CREATED" "STRIPE"
+  printf "%-20s %-15s %-25s %s\n" "---------" "------" "-------" "------"
+
+  for i in $(seq 0 $((count - 1))); do
+    local sub status created stripe_id
+    sub=$(echo "$customers" | jq -r ".[$i].subdomain")
+    status=$(echo "$customers" | jq -r ".[$i].status")
+    created=$(echo "$customers" | jq -r ".[$i].created_at")
+    stripe_id=$(echo "$customers" | jq -r ".[$i].stripe_customer_id // \"-\"")
+    printf "%-20s %-15s %-25s %s\n" "$sub" "$status" "$created" "$stripe_id"
+  done
+}
+
+cmd_backup() {
+  exec "${SCRIPT_DIR}/backup_all.sh" "$@"
+}
+
+cmd_update() {
+  exec "${SCRIPT_DIR}/rolling_update.sh" "$@"
+}
+
+cmd_status() {
+  local subdomain="${1:-}"
+
+  if [ -n "$subdomain" ]; then
+    local name="clawbot-${subdomain//./-}"
+    docker inspect --format \
+      'Name: {{.Name}}
+State: {{.State.Status}}
+Health: {{.State.Health.Status}}
+Started: {{.State.StartedAt}}
+Restarts: {{.RestartCount}}' "$name" 2>/dev/null || echo "Container not found: $name"
+    return
+  fi
+
+  # Show all clawbot containers
+  echo "CONTAINER                STATUS     HEALTH      CPU%   MEM USAGE"
+  echo "---------                ------     ------      ----   ---------"
+  docker stats --no-stream --format "{{.Name}}\t{{.PIDs}}\t{{.CPUPerc}}\t{{.MemUsage}}" \
+    $(docker ps --filter "name=clawbot-" --format "{{.Names}}" | grep -v caddy | grep -v webhook) 2>/dev/null | \
+  while IFS=$'\t' read -r name pids cpu mem; do
+    local health
+    health=$(docker inspect --format='{{.State.Health.Status}}' "$name" 2>/dev/null || echo "n/a")
+    local state
+    state=$(docker inspect --format='{{.State.Status}}' "$name" 2>/dev/null || echo "unknown")
+    printf "%-24s %-10s %-11s %-6s %s\n" "$name" "$state" "$health" "$cpu" "$mem"
+  done
+}
+
+cmd_db_get() {
+  local subdomain="${1:?subdomain required}"
+  db_init
+  local result
+  result=$(db_get_customer "$subdomain")
+  if [ -z "$result" ]; then
+    echo "Customer not found: $subdomain" >&2
+    return 1
+  fi
+  echo "$result" | jq .
+}
+
+# Main dispatch
+COMMAND="${1:-help}"
+shift || true
+
+case "$COMMAND" in
+  provision)    cmd_provision "$@" ;;
+  deprovision)  cmd_deprovision "$@" ;;
+  list)         cmd_list "$@" ;;
+  backup)       cmd_backup "$@" ;;
+  update)       cmd_update "$@" ;;
+  status)       cmd_status "$@" ;;
+  db-get)       cmd_db_get "$@" ;;
+  help|--help|-h) usage ;;
+  *)
+    echo "Unknown command: $COMMAND" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

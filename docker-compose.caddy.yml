@@ -1,0 +1,22 @@
+services:
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:2.8-alpine
+    container_name: clawbot-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - clawbot
+
+networks:
+  clawbot:
+    name: clawbot_net
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClawBot - Your AI Desktop in the Cloud</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-gray-950 text-white">
+
+  <!-- Nav -->
+  <nav class="fixed top-0 w-full bg-gray-950/80 backdrop-blur-md border-b border-gray-800 z-50">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <span class="text-xl font-bold">ClawBot</span>
+      <div class="flex items-center gap-6 text-sm">
+        <a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a>
+        <a href="#pricing" class="text-gray-400 hover:text-white transition-colors">Pricing</a>
+        <a href="#faq" class="text-gray-400 hover:text-white transition-colors">FAQ</a>
+        <a href="#signup" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <h1 class="text-5xl sm:text-6xl font-bold mb-6 leading-tight">
+        Your AI desktop,<br>
+        <span class="text-blue-400">ready in 30 seconds</span>
+      </h1>
+      <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+        A full cloud desktop with ClawBot pre-installed. No setup, no hardware,
+        no headaches. Just open your browser and start working.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#signup"
+           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors">
+          Start for $20/month
+        </a>
+        <a href="#features"
+           class="text-gray-400 hover:text-white font-medium px-8 py-4 transition-colors">
+          See how it works
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20 px-6 border-t border-gray-800">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Everything you need, nothing you don't</h2>
+      <p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto">
+        Each desktop is a fully isolated environment with ClawBot ready to go.
+        Access it from any device with a browser.
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Instant Setup</h3>
+          <p class="text-gray-400 text-sm">
+            Subscribe and your desktop is live in under a minute.
+            No downloads, no installs, no configuration.
+          </p>
+        </div>
+
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Full Desktop</h3>
+          <p class="text-gray-400 text-sm">
+            A complete Ubuntu desktop environment accessible from your browser.
+            Works on your laptop, tablet, or phone.
+          </p>
+        </div>
+
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Private & Secure</h3>
+          <p class="text-gray-400 text-sm">
+            Your desktop runs in its own isolated container. Sign in with Google and
+            only you can access it. All traffic encrypted with HTTPS.
+          </p>
+        </div>
+
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Persistent Storage</h3>
+          <p class="text-gray-400 text-sm">
+            Your files, settings, and projects are saved automatically.
+            Pick up right where you left off, every time.
+          </p>
+        </div>
+
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">ClawBot Built In</h3>
+          <p class="text-gray-400 text-sm">
+            ClawBot is pre-installed and configured. Launch it from the terminal
+            and start automating immediately.
+          </p>
+        </div>
+
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Access Anywhere</h3>
+          <p class="text-gray-400 text-sm">
+            Your desktop lives at its own private URL. Open it from any browser,
+            on any device, wherever you are.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="py-20 px-6 border-t border-gray-800">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-4">Simple pricing</h2>
+      <p class="text-gray-400 text-center mb-12">No tiers, no hidden fees. One plan that includes everything.</p>
+
+      <div class="max-w-sm mx-auto bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
+        <div class="p-8">
+          <p class="text-sm font-medium text-blue-400 mb-4">Cloud Desktop</p>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="text-5xl font-bold">$20</span>
+            <span class="text-gray-400">/month</span>
+          </div>
+          <p class="text-gray-500 text-sm mb-8">Cancel anytime, no commitment.</p>
+
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-3 text-sm">
+              <svg class="w-5 h-5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="text-gray-300">Full Ubuntu cloud desktop</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm">
+              <svg class="w-5 h-5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="text-gray-300">ClawBot pre-installed and ready</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm">
+              <svg class="w-5 h-5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="text-gray-300">Your own subdomain with HTTPS</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm">
+              <svg class="w-5 h-5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="text-gray-300">Persistent storage for your files</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm">
+              <svg class="w-5 h-5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="text-gray-300">Daily backups included</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm">
+              <svg class="w-5 h-5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="text-gray-300">Access from any browser, any device</span>
+            </li>
+          </ul>
+
+          <a href="#signup"
+             class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4
+                    rounded-lg transition-colors text-center">
+            Get Started
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 px-6 border-t border-gray-800">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">Frequently asked questions</h2>
+
+      <div class="space-y-6">
+        <details class="group bg-gray-900 rounded-xl border border-gray-800">
+          <summary class="flex items-center justify-between p-6 cursor-pointer text-lg font-medium">
+            What is ClawBot?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <p class="px-6 pb-6 text-gray-400">
+            ClawBot is an AI-powered automation tool that runs on your desktop.
+            With ClawBot Hosting, you get a cloud desktop with ClawBot already installed
+            so you can start using it immediately without any local setup.
+          </p>
+        </details>
+
+        <details class="group bg-gray-900 rounded-xl border border-gray-800">
+          <summary class="flex items-center justify-between p-6 cursor-pointer text-lg font-medium">
+            How do I access my desktop?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <p class="px-6 pb-6 text-gray-400">
+            After signing up, you'll receive a unique desktop URL. Visit it in any browser
+            and sign in with the Google account you used to subscribe. No passwords to remember,
+            no software to install.
+          </p>
+        </details>
+
+        <details class="group bg-gray-900 rounded-xl border border-gray-800">
+          <summary class="flex items-center justify-between p-6 cursor-pointer text-lg font-medium">
+            Is my data safe?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <p class="px-6 pb-6 text-gray-400">
+            Yes. Each desktop runs in its own isolated container with its own private network.
+            All connections are encrypted with HTTPS. Your files are stored on persistent volumes
+            with daily backups.
+          </p>
+        </details>
+
+        <details class="group bg-gray-900 rounded-xl border border-gray-800">
+          <summary class="flex items-center justify-between p-6 cursor-pointer text-lg font-medium">
+            Can I cancel anytime?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <p class="px-6 pb-6 text-gray-400">
+            Yes. Cancel your subscription anytime from your Stripe billing portal.
+            There are no contracts or cancellation fees.
+          </p>
+        </details>
+
+        <details class="group bg-gray-900 rounded-xl border border-gray-800">
+          <summary class="flex items-center justify-between p-6 cursor-pointer text-lg font-medium">
+            What happens to my files if I cancel?
+            <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <p class="px-6 pb-6 text-gray-400">
+            When your subscription ends, your desktop is shut down. Your data is retained
+            for 30 days in case you want to resubscribe. After that, it's permanently deleted.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signup -->
+  <section id="signup" class="py-20 px-6 border-t border-gray-800">
+    <div class="max-w-md mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-2">Get your desktop</h2>
+      <p class="text-gray-400 mb-8">Subscribe and you'll be up and running in under a minute.</p>
+
+      <form action="/api/create-checkout-session" method="POST"
+            class="bg-gray-900 rounded-xl p-8 shadow-lg border border-gray-800">
+
+        <p class="text-gray-400 text-sm mb-6">
+          You'll sign in with your Google account after checkout.
+          A private desktop URL will be generated for you automatically.
+        </p>
+
+        <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700
+                       text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+          Subscribe - $20/month
+        </button>
+
+        {% if request.args.get('cancelled') %}
+        <p class="text-amber-400 text-sm mt-3">Checkout was cancelled. Try again when you're ready.</p>
+        {% endif %}
+      </form>
+
+      <p class="text-gray-500 text-xs mt-6">
+        Secure payment via Stripe. Cancel anytime, no questions asked.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-800 py-8 px-6">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span class="text-gray-500 text-sm">ClawBot Hosting</span>
+      <div class="flex items-center gap-6 text-sm text-gray-500">
+        <a href="#features" class="hover:text-gray-300 transition-colors">Features</a>
+        <a href="#pricing" class="hover:text-gray-300 transition-colors">Pricing</a>
+        <a href="#faq" class="hover:text-gray-300 transition-colors">FAQ</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+services:
+  clawbot-desktop:
+    build: .
+    container_name: clawbot-desktop-test
+    platform: linux/amd64
+    ports:
+      - "6901:6901"
+    environment:
+      # Set a test password for KasmVNC
+      - VNC_PW=changeme
+    shm_size: "1gb"

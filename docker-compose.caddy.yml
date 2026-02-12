@@ -1,7 +1,7 @@
 services:
   caddy:
     image: lucaslorentz/caddy-docker-proxy:2.8-alpine
-    container_name: clawbot-caddy
+    container_name: openclaw-caddy
     restart: unless-stopped
     ports:
       - "80:80"
@@ -11,11 +11,11 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     networks:
-      - clawbot
+      - openclaw
 
 networks:
-  clawbot:
-    name: clawbot_net
+  openclaw:
+    name: openclaw_net
 
 volumes:
   caddy_data:

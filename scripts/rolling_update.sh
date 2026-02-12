@@ -6,9 +6,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/db.sh"
 
-IMAGE="${1:-${IMAGE:-clawbot-desktop:latest}}"
+IMAGE="${1:-${IMAGE:-openclaw-desktop:latest}}"
 BASE_DOMAIN="${BASE_DOMAIN:-example.com}"
-NETWORK="${NETWORK:-clawbot_net}"
+NETWORK="${NETWORK:-openclaw_net}"
 CPUS="${CPUS:-1}"
 MEMORY="${MEMORY:-2g}"
 SHM_SIZE="${SHM_SIZE:-1g}"
@@ -35,9 +35,9 @@ for i in $(seq 0 $((COUNT - 1))); do
   SUBDOMAIN=$(echo "$CUSTOMERS" | jq -r ".[$i].subdomain")
   PASSWORD=$(echo "$CUSTOMERS" | jq -r ".[$i].vnc_password")
 
-  NAME="clawbot-${SUBDOMAIN//./-}"
-  VOLUME="clawbot-${SUBDOMAIN//./-}-home"
-  NET_PER_CUSTOMER="clawbot-${SUBDOMAIN//./-}-net"
+  NAME="openclaw-${SUBDOMAIN//./-}"
+  VOLUME="openclaw-${SUBDOMAIN//./-}-home"
+  NET_PER_CUSTOMER="openclaw-${SUBDOMAIN//./-}-net"
 
   echo "  Updating ${SUBDOMAIN}..."
 
@@ -64,8 +64,8 @@ for i in $(seq 0 $((COUNT - 1))); do
     "$IMAGE" >/dev/null 2>&1; then
 
     # Reconnect Caddy
-    if docker ps --format '{{.Names}}' | grep -qx "clawbot-caddy"; then
-      docker network connect "$NET_PER_CUSTOMER" clawbot-caddy >/dev/null 2>&1 || true
+    if docker ps --format '{{.Names}}' | grep -qx "openclaw-caddy"; then
+      docker network connect "$NET_PER_CUSTOMER" openclaw-caddy >/dev/null 2>&1 || true
     fi
 
     # Wait for healthcheck

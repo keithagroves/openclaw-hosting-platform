@@ -52,7 +52,7 @@ variable "base_domain" {
 variable "repo_url" {
   description = "Git repository URL to clone onto the server"
   type        = string
-  default     = "https://github.com/keithgroves/clawbot-hosting.git"
+  default     = "https://github.com/keithgroves/openclaw-hosting.git"
 }
 
 variable "admin_api_key" {

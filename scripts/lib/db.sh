@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Customer JSON database helpers
 # Uses jq for JSON manipulation and flock for concurrent access safety.
-# Database file path: ${CLAWBOT_DATA_DIR:-./data}/customers.json
+# Database file path: ${OPENCLAW_DATA_DIR:-./data}/customers.json
 
 set -euo pipefail
 
-DB_DIR="${CLAWBOT_DATA_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/data}"
+DB_DIR="${OPENCLAW_DATA_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/data}"
 DB_FILE="${DB_DIR}/customers.json"
 LOCK_FILE="${DB_FILE}.lock"
 

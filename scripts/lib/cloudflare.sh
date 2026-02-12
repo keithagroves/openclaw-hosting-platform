@@ -96,7 +96,7 @@ cf_create_access_policy() {
   local app_response
   app_response=$(_cf_curl POST "/accounts/${account_id}/access/apps" \
     -d "{
-      \"name\": \"clawbot-${subdomain}\",
+      \"name\": \"openclaw-${subdomain}\",
       \"domain\": \"${fqdn}\",
       \"type\": \"self_hosted\",
       \"session_duration\": \"24h\",

@@ -30,15 +30,15 @@ if [ -z "$SUBDOMAIN" ]; then
 fi
 
 BASE_DOMAIN="${BASE_DOMAIN:-example.com}"
-IMAGE="${IMAGE:-clawbot-desktop:latest}"
-NETWORK="${NETWORK:-clawbot_net}"
+IMAGE="${IMAGE:-openclaw-desktop:latest}"
+NETWORK="${NETWORK:-openclaw_net}"
 CPUS="${CPUS:-1}"
 MEMORY="${MEMORY:-2g}"
 SHM_SIZE="${SHM_SIZE:-1g}"
 
-NAME="clawbot-${SUBDOMAIN//./-}"
-VOLUME="clawbot-${SUBDOMAIN//./-}-home"
-NET_PER_CUSTOMER="clawbot-${SUBDOMAIN//./-}-net"
+NAME="openclaw-${SUBDOMAIN//./-}"
+VOLUME="openclaw-${SUBDOMAIN//./-}-home"
+NET_PER_CUSTOMER="openclaw-${SUBDOMAIN//./-}-net"
 
 # VNC password: use positional arg or generate
 PASSWORD="${POSITIONAL[1]:-}"
@@ -80,8 +80,8 @@ docker run -d \
   "$IMAGE"
 
 # Connect Caddy to customer network
-if docker ps --format '{{.Names}}' | grep -qx "clawbot-caddy"; then
-  docker network connect "$NET_PER_CUSTOMER" clawbot-caddy >/dev/null 2>&1 || true
+if docker ps --format '{{.Names}}' | grep -qx "openclaw-caddy"; then
+  docker network connect "$NET_PER_CUSTOMER" openclaw-caddy >/dev/null 2>&1 || true
 fi
 
 # Create Cloudflare DNS record

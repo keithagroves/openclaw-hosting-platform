@@ -1,14 +1,14 @@
 # ── SSH Key ────────────────────────────────────────────────────────────────────
 
-resource "hcloud_ssh_key" "clawbot" {
-  name       = "clawbot-deploy"
+resource "hcloud_ssh_key" "openclaw" {
+  name       = "openclaw-deploy"
   public_key = file(var.ssh_public_key_path)
 }
 
 # ── Firewall ──────────────────────────────────────────────────────────────────
 
-resource "hcloud_firewall" "clawbot" {
-  name = "clawbot-fw"
+resource "hcloud_firewall" "openclaw" {
+  name = "openclaw-fw"
 
   rule {
     direction = "in"
@@ -34,14 +34,14 @@ resource "hcloud_firewall" "clawbot" {
 
 # ── Server ────────────────────────────────────────────────────────────────────
 
-resource "hcloud_server" "clawbot" {
-  name        = "clawbot-1"
+resource "hcloud_server" "openclaw" {
+  name        = "openclaw-1"
   image       = "ubuntu-24.04"
   server_type = var.server_type
   location    = var.server_location
-  ssh_keys    = [hcloud_ssh_key.clawbot.id]
+  ssh_keys    = [hcloud_ssh_key.openclaw.id]
 
-  firewall_ids = [hcloud_firewall.clawbot.id]
+  firewall_ids = [hcloud_firewall.openclaw.id]
 
   user_data = templatefile("${path.module}/cloud-init.yml", {
     base_domain           = var.base_domain
@@ -54,7 +54,7 @@ resource "hcloud_server" "clawbot" {
   })
 
   labels = {
-    app = "clawbot"
+    app = "openclaw"
   }
 }
 

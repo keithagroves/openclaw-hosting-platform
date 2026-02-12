@@ -1,7 +1,7 @@
 services:
-  clawbot-desktop:
+  openclaw-desktop:
     build: .
-    container_name: clawbot-desktop-test
+    container_name: openclaw-desktop-test
     platform: linux/amd64
     ports:
       - "6901:6901"

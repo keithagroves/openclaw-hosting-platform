@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# server_setup.sh — Bootstrap a fresh Ubuntu 24.04 server for Clawbot Hosting.
+# server_setup.sh — Bootstrap a fresh Ubuntu 24.04 server for Openclaw Hosting.
 # Run as root: curl -sSL <raw-url> | bash
 # Or after cloning: sudo ./scripts/server_setup.sh
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-DATA_DIR="/opt/clawbot/data"
-ENV_FILE="/opt/clawbot/.env"
+DATA_DIR="/opt/openclaw/data"
+ENV_FILE="/opt/openclaw/.env"
 
-echo "==> Clawbot server setup"
+echo "==> Openclaw server setup"
 
 # ── Check root ────────────────────────────────────────────────────────────────
 if [[ $EUID -ne 0 ]]; then
@@ -36,17 +36,17 @@ fi
 # ── Set up directories ───────────────────────────────────────────────────────
 echo "==> Creating directories..."
 mkdir -p "$DATA_DIR/backups"
-mkdir -p /opt/clawbot
+mkdir -p /opt/openclaw
 
-# ── Symlink repo into /opt/clawbot ───────────────────────────────────────────
+# ── Symlink repo into /opt/openclaw ───────────────────────────────────────────
 echo "==> Linking repo..."
-ln -sfn "$REPO_DIR/scripts" /opt/clawbot/scripts
-ln -sfn "$REPO_DIR/webhook" /opt/clawbot/webhook
-ln -sfn "$REPO_DIR/docker-compose.caddy.yml" /opt/clawbot/docker-compose.caddy.yml
-ln -sfn "$REPO_DIR/docker-compose.webhook.yml" /opt/clawbot/docker-compose.webhook.yml
+ln -sfn "$REPO_DIR/scripts" /opt/openclaw/scripts
+ln -sfn "$REPO_DIR/webhook" /opt/openclaw/webhook
+ln -sfn "$REPO_DIR/docker-compose.caddy.yml" /opt/openclaw/docker-compose.caddy.yml
+ln -sfn "$REPO_DIR/docker-compose.webhook.yml" /opt/openclaw/docker-compose.webhook.yml
 
 # ── Make scripts executable ──────────────────────────────────────────────────
-chmod +x "$REPO_DIR"/scripts/*.sh "$REPO_DIR"/scripts/clawbot-admin "$REPO_DIR"/scripts/lib/*.sh 2>/dev/null || true
+chmod +x "$REPO_DIR"/scripts/*.sh "$REPO_DIR"/scripts/openclaw-admin "$REPO_DIR"/scripts/lib/*.sh 2>/dev/null || true
 
 # ── Check for .env ───────────────────────────────────────────────────────────
 if [[ ! -f "$ENV_FILE" ]]; then
@@ -71,17 +71,17 @@ if [[ -z "${SERVER_IP:-}" ]]; then
   fi
 fi
 
-# ── Build clawbot-desktop image ──────────────────────────────────────────────
-echo "==> Building clawbot-desktop image..."
-docker build -t clawbot-desktop:latest "$REPO_DIR"
+# ── Build openclaw-desktop image ──────────────────────────────────────────────
+echo "==> Building openclaw-desktop image..."
+docker build -t openclaw-desktop:latest "$REPO_DIR"
 
 # ── Create shared network ────────────────────────────────────────────────────
 echo "==> Creating Docker network..."
-docker network create clawbot_net 2>/dev/null || true
+docker network create openclaw_net 2>/dev/null || true
 
 # ── Start Caddy ──────────────────────────────────────────────────────────────
 echo "==> Starting Caddy reverse proxy..."
-cd /opt/clawbot
+cd /opt/openclaw
 docker compose -f docker-compose.caddy.yml --env-file "$ENV_FILE" up -d
 
 # ── Start webhook service ────────────────────────────────────────────────────
@@ -90,8 +90,8 @@ docker compose -f docker-compose.webhook.yml --env-file "$ENV_FILE" up -d --buil
 
 # ── Install backup cron ──────────────────────────────────────────────────────
 echo "==> Installing backup cron job..."
-cat > /etc/cron.d/clawbot-backup <<CRON
-0 3 * * * root cd /opt/clawbot && /opt/clawbot/scripts/backup_all.sh >> /var/log/clawbot-backup.log 2>&1
+cat > /etc/cron.d/openclaw-backup <<CRON
+0 3 * * * root cd /opt/openclaw && /opt/openclaw/scripts/backup_all.sh >> /var/log/openclaw-backup.log 2>&1
 CRON
 
 echo ""
@@ -101,5 +101,5 @@ echo "    SSH:         ssh root@$(grep '^SERVER_IP=' "$ENV_FILE" | cut -d= -f2)"
 echo ""
 echo "    Next steps:"
 echo "    1. Set STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_ID in $ENV_FILE"
-echo "    2. Restart webhook: cd /opt/clawbot && docker compose -f docker-compose.webhook.yml --env-file .env up -d"
+echo "    2. Restart webhook: cd /opt/openclaw && docker compose -f docker-compose.webhook.yml --env-file .env up -d"
 echo "    3. Configure Stripe webhook endpoint: https://admin.${BASE_DOMAIN:-example.com}/webhook"

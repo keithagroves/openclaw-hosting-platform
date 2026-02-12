@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ClawBot admin CLI
+# OpenClaw admin CLI
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -7,7 +7,7 @@ source "${SCRIPT_DIR}/lib/db.sh"
 
 usage() {
   cat <<EOF
-Usage: clawbot-admin <command> [options]
+Usage: openclaw-admin <command> [options]
 
 Commands:
   provision <subdomain> [password]   Provision a new customer
@@ -80,7 +80,7 @@ cmd_status() {
   local subdomain="${1:-}"
 
   if [ -n "$subdomain" ]; then
-    local name="clawbot-${subdomain//./-}"
+    local name="openclaw-${subdomain//./-}"
     docker inspect --format \
       'Name: {{.Name}}
 State: {{.State.Status}}
@@ -90,11 +90,11 @@ Restarts: {{.RestartCount}}' "$name" 2>/dev/null || echo "Container not found: $
     return
   fi
 
-  # Show all clawbot containers
+  # Show all openclaw containers
   echo "CONTAINER                STATUS     HEALTH      CPU%   MEM USAGE"
   echo "---------                ------     ------      ----   ---------"
   docker stats --no-stream --format "{{.Name}}\t{{.PIDs}}\t{{.CPUPerc}}\t{{.MemUsage}}" \
-    $(docker ps --filter "name=clawbot-" --format "{{.Names}}" | grep -v caddy | grep -v webhook) 2>/dev/null | \
+    $(docker ps --filter "name=openclaw-" --format "{{.Names}}" | grep -v caddy | grep -v webhook) 2>/dev/null | \
   while IFS=$'\t' read -r name pids cpu mem; do
     local health
     health=$(docker inspect --format='{{.State.Health.Status}}' "$name" 2>/dev/null || echo "n/a")

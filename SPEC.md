@@ -1,13 +1,13 @@
-Goal: Create a sellable, browser-accessible remote desktop service with ClawBot pre-installed.
+Goal: Create a sellable, browser-accessible remote desktop service with OpenClaw pre-installed.
 Stack:
 
 Base image: KasmVNC Ubuntu desktop Docker image (kasmweb/ubuntu-jammy-desktop)
-Application: ClawBot, installed via curl -fsSL https://openclaw.ai/install.sh | bash
+Application: OpenClaw, installed via curl -fsSL https://openclaw.ai/install.sh | bash
 Access: Customers connect via browser to a web-based desktop (KasmVNC on port 6901), authenticated with a per-customer password
 
 Requirements:
 
-Custom Dockerfile that extends the Kasm Ubuntu image and pre-installs ClawBot
+Custom Dockerfile that extends the Kasm Ubuntu image and pre-installs OpenClaw
 Per-customer Docker containers with isolated environments
 Password authentication set via environment variable (VNC_PW) per customer
 Persistent volume mounts for customer data

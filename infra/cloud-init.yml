@@ -12,7 +12,7 @@ packages:
   - unattended-upgrades
 
 write_files:
-  - path: /opt/clawbot/.env
+  - path: /opt/openclaw/.env
     permissions: "0600"
     content: |
       BASE_DOMAIN=${base_domain}
@@ -21,18 +21,18 @@ write_files:
       CLOUDFLARE_ZONE_ID=${cloudflare_zone_id}
       CLOUDFLARE_ACCOUNT_ID=${cloudflare_account_id}
       ADMIN_API_KEY=${admin_api_key}
-      IMAGE=clawbot-desktop:latest
+      IMAGE=openclaw-desktop:latest
       CPUS=1
       MEMORY=2g
       SHM_SIZE=1g
-      CLAWBOT_DATA_DIR=/opt/clawbot/data
-      BACKUP_DIR=/opt/clawbot/data/backups
+      OPENCLAW_DATA_DIR=/opt/openclaw/data
+      BACKUP_DIR=/opt/openclaw/data/backups
       BACKUP_RETENTION_DAYS=7
 
-  - path: /etc/cron.d/clawbot-backup
+  - path: /etc/cron.d/openclaw-backup
     permissions: "0644"
     content: |
-      0 3 * * * root cd /opt/clawbot && /opt/clawbot/scripts/backup_all.sh >> /var/log/clawbot-backup.log 2>&1
+      0 3 * * * root cd /opt/openclaw && /opt/openclaw/scripts/backup_all.sh >> /var/log/openclaw-backup.log 2>&1
 
 runcmd:
   # ── Install Docker ───────────────────────────────────────────────────────────
@@ -44,36 +44,36 @@ runcmd:
   - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
   # ── Clone repo ───────────────────────────────────────────────────────────────
-  - git clone ${repo_url} /opt/clawbot/repo
-  - ln -sf /opt/clawbot/repo/scripts /opt/clawbot/scripts
-  - ln -sf /opt/clawbot/repo/webhook /opt/clawbot/webhook
-  - ln -sf /opt/clawbot/repo/docker-compose.caddy.yml /opt/clawbot/docker-compose.caddy.yml
-  - ln -sf /opt/clawbot/repo/docker-compose.webhook.yml /opt/clawbot/docker-compose.webhook.yml
-  - chmod +x /opt/clawbot/scripts/*.sh /opt/clawbot/scripts/clawbot-admin /opt/clawbot/scripts/lib/*.sh
+  - git clone ${repo_url} /opt/openclaw/repo
+  - ln -sf /opt/openclaw/repo/scripts /opt/openclaw/scripts
+  - ln -sf /opt/openclaw/repo/webhook /opt/openclaw/webhook
+  - ln -sf /opt/openclaw/repo/docker-compose.caddy.yml /opt/openclaw/docker-compose.caddy.yml
+  - ln -sf /opt/openclaw/repo/docker-compose.webhook.yml /opt/openclaw/docker-compose.webhook.yml
+  - chmod +x /opt/openclaw/scripts/*.sh /opt/openclaw/scripts/openclaw-admin /opt/openclaw/scripts/lib/*.sh
 
   # ── Patch .env with actual server IP ─────────────────────────────────────────
   - |
     SERVER_IP=$(curl -s http://169.254.169.254/hetzner/v1/metadata/public-ipv4)
-    sed -i "s/__SERVER_IP__/$SERVER_IP/" /opt/clawbot/.env
+    sed -i "s/__SERVER_IP__/$SERVER_IP/" /opt/openclaw/.env
 
   # ── Create data directory ────────────────────────────────────────────────────
-  - mkdir -p /opt/clawbot/data/backups
+  - mkdir -p /opt/openclaw/data/backups
 
-  # ── Build clawbot-desktop image ──────────────────────────────────────────────
-  - docker build -t clawbot-desktop:latest /opt/clawbot/repo
+  # ── Build openclaw-desktop image ──────────────────────────────────────────────
+  - docker build -t openclaw-desktop:latest /opt/openclaw/repo
 
   # ── Create shared network ───────────────────────────────────────────────────
-  - docker network create clawbot_net || true
+  - docker network create openclaw_net || true
 
   # ── Start Caddy reverse proxy ───────────────────────────────────────────────
   - |
-    cd /opt/clawbot
+    cd /opt/openclaw
     docker compose -f docker-compose.caddy.yml --env-file .env up -d
 
   # ── Build & start webhook service ───────────────────────────────────────────
   - |
-    cd /opt/clawbot
+    cd /opt/openclaw
     docker compose -f docker-compose.webhook.yml --env-file .env up -d --build
 
   # ── Log completion ──────────────────────────────────────────────────────────
-  - echo "$(date): Clawbot server bootstrap complete" >> /var/log/clawbot-setup.log
+  - echo "$(date): Openclaw server bootstrap complete" >> /var/log/openclaw-setup.log

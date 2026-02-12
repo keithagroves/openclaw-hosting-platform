@@ -21,9 +21,9 @@ if [ "${#POSITIONAL[@]}" -lt 1 ]; then
 fi
 
 SUBDOMAIN="${POSITIONAL[0]}"
-NAME="clawbot-${SUBDOMAIN//./-}"
-VOLUME="clawbot-${SUBDOMAIN//./-}-home"
-NET_PER_CUSTOMER="clawbot-${SUBDOMAIN//./-}-net"
+NAME="openclaw-${SUBDOMAIN//./-}"
+VOLUME="openclaw-${SUBDOMAIN//./-}-home"
+NET_PER_CUSTOMER="openclaw-${SUBDOMAIN//./-}-net"
 
 # Look up Cloudflare record ID from database before removing anything
 db_init

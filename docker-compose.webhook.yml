@@ -1,12 +1,12 @@
 services:
   webhook:
     build: ./webhook
-    container_name: clawbot-webhook
+    container_name: openclaw-webhook
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./scripts:/app/scripts:ro
-      - ${CLAWBOT_DATA_DIR:-./data}:/data
+      - ${OPENCLAW_DATA_DIR:-./data}:/data
     environment:
       - STRIPE_SECRET_KEY
       - STRIPE_WEBHOOK_SECRET
@@ -16,16 +16,16 @@ services:
       - CLOUDFLARE_ACCOUNT_ID
       - BASE_DOMAIN=${BASE_DOMAIN:-example.com}
       - SERVER_IP
-      - CLAWBOT_DATA_DIR=/data
-      - IMAGE=${IMAGE:-clawbot-desktop:latest}
+      - OPENCLAW_DATA_DIR=/data
+      - IMAGE=${IMAGE:-openclaw-desktop:latest}
       - ADMIN_API_KEY
     networks:
-      - clawbot
+      - openclaw
     labels:
       caddy: admin.${BASE_DOMAIN:-example.com}
       caddy.reverse_proxy: "{{upstreams 5000}}"
 
 networks:
-  clawbot:
-    name: clawbot_net
+  openclaw:
+    name: openclaw_net
     external: true

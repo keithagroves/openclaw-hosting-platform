@@ -3,7 +3,7 @@ FROM kasmweb/desktop:${BASE_TAG}
 
 USER root
 
-# Install ClawBot via official installer (skip onboarding in non-interactive build)
+# Install OpenClaw via official installer (skip onboarding in non-interactive build)
 ENV NPM_CONFIG_PREFIX=/usr/local \
     OPENCLAW_NO_PROMPT=1 \
     OPENCLAW_NO_ONBOARD=1 \
@@ -14,7 +14,6 @@ RUN apt-get update \
   && curl -fsSL https://openclaw.ai/install.sh | bash \
   && command -v openclaw >/dev/null \
   && openclaw --version >/dev/null \
-  && ln -sf "$(command -v openclaw)" /usr/local/bin/clawbot \
   && printf '%s\n' \
     "#!/bin/bash" \
     "set -euo pipefail" \

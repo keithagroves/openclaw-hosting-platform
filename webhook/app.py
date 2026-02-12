@@ -15,7 +15,7 @@ WEBHOOK_SECRET = os.environ["STRIPE_WEBHOOK_SECRET"]
 STRIPE_PRICE_ID = os.environ["STRIPE_PRICE_ID"]
 BASE_DOMAIN = os.environ.get("BASE_DOMAIN", "example.com")
 ADMIN_API_KEY = os.environ.get("ADMIN_API_KEY", "")
-DATA_DIR = Path(os.environ.get("CLAWBOT_DATA_DIR", "/data"))
+DATA_DIR = Path(os.environ.get("OPENCLAW_DATA_DIR", "/data"))
 DB_FILE = DATA_DIR / "customers.json"
 SCRIPTS_DIR = Path("/app/scripts")
 
@@ -157,7 +157,7 @@ def success():
 
 @app.route("/api/status/<subdomain>")
 def status(subdomain):
-    container_name = f"clawbot-{subdomain.replace('.', '-')}"
+    container_name = f"openclaw-{subdomain.replace('.', '-')}"
     result = subprocess.run(
         ["docker", "inspect", "--format", "{{.State.Health.Status}}", container_name],
         capture_output=True,

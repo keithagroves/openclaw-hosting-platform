@@ -25,7 +25,7 @@
 
 - [ ] Generate a deploy key if you don't have one:
   ```bash
-  ssh-keygen -t ed25519 -f ~/.ssh/clawbot_deploy -C "clawbot-deploy"
+  ssh-keygen -t ed25519 -f ~/.ssh/openclaw_deploy -C "openclaw-deploy"
   ```
 - [ ] Note the path — you'll use it in `terraform.tfvars`
 
@@ -58,9 +58,9 @@ ssh root@<server-ip>
 tail -f /var/log/cloud-init-output.log
 ```
 
-- [ ] Cloud-init finishes (check `/var/log/clawbot-setup.log`)
+- [ ] Cloud-init finishes (check `/var/log/openclaw-setup.log`)
 - [ ] Docker is running: `docker ps`
-- [ ] clawbot-desktop image is built: `docker images | grep clawbot`
+- [ ] openclaw-desktop image is built: `docker images | grep openclaw`
 - [ ] Caddy is running: `docker ps | grep caddy`
 - [ ] Webhook service is running: `docker ps | grep webhook`
 
@@ -70,14 +70,14 @@ Cloud-init doesn't have your Stripe keys (they aren't in Terraform). SSH in and 
 
 ```bash
 ssh root@<server-ip>
-vi /opt/clawbot/.env
+vi /opt/openclaw/.env
 # Add: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_ID
 
-cd /opt/clawbot
+cd /opt/openclaw
 docker compose -f docker-compose.webhook.yml --env-file .env up -d
 ```
 
-- [ ] Stripe env vars are set in `/opt/clawbot/.env`
+- [ ] Stripe env vars are set in `/opt/openclaw/.env`
 - [ ] Webhook service restarted with Stripe keys
 
 ## 7. Verify Services
@@ -114,23 +114,23 @@ Use Stripe test mode first:
 
 ## 10. Go Live
 
-- [ ] Switch Stripe to live mode — update keys in `/opt/clawbot/.env`
+- [ ] Switch Stripe to live mode — update keys in `/opt/openclaw/.env`
 - [ ] Create live webhook endpoint in Stripe (same URL, same events)
 - [ ] Update `STRIPE_WEBHOOK_SECRET` with the live signing secret
 - [ ] Restart webhook service:
   ```bash
-  cd /opt/clawbot && docker compose -f docker-compose.webhook.yml --env-file .env up -d
+  cd /opt/openclaw && docker compose -f docker-compose.webhook.yml --env-file .env up -d
   ```
 - [ ] Do one real purchase to verify end-to-end
 
 ## 11. Ongoing Operations
 
-- [ ] Backups are running nightly (check `/var/log/clawbot-backup.log`)
+- [ ] Backups are running nightly (check `/var/log/openclaw-backup.log`)
 - [ ] Set up monitoring/alerting (uptime check on `https://admin.<your-domain>`)
 - [ ] To update the platform:
   ```bash
   ssh root@<server-ip>
-  cd /opt/clawbot/repo && git pull
-  docker build -t clawbot-desktop:latest .
-  /opt/clawbot/scripts/rolling_update.sh
+  cd /opt/openclaw/repo && git pull
+  docker build -t openclaw-desktop:latest .
+  /opt/openclaw/scripts/rolling_update.sh
   ```

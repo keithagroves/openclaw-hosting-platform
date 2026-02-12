@@ -1,8 +1,8 @@
-# ClawBot Hosting
+# OpenClaw Hosting
 
-Browser-accessible cloud desktops with ClawBot pre-installed. Each customer gets an isolated KasmVNC container behind HTTPS, provisioned automatically via Stripe.
+Browser-accessible cloud desktops with OpenClaw pre-installed. Each customer gets an isolated KasmVNC container behind HTTPS, provisioned automatically via Stripe.
 
-![ClawBot Desktop](screenshot.png)
+![OpenClaw Desktop](screenshot.png)
 
 ## Architecture
 
@@ -12,12 +12,12 @@ Customer browser
     ▼
 Caddy (HTTPS, auto-certs)
     │
-    ├── alice.example.com  →  clawbot-alice:6901
-    ├── bob.example.com    →  clawbot-bob:6901
-    └── admin.example.com  →  clawbot-webhook:5000
+    ├── alice.example.com  →  openclaw-alice:6901
+    ├── bob.example.com    →  openclaw-bob:6901
+    └── admin.example.com  →  openclaw-webhook:5000
 ```
 
-- **Base image:** KasmVNC Ubuntu desktop + ClawBot (`Dockerfile`)
+- **Base image:** KasmVNC Ubuntu desktop + OpenClaw (`Dockerfile`)
 - **Reverse proxy:** Caddy with Docker label discovery — auto-HTTPS per subdomain
 - **Isolation:** Each customer runs on its own Docker network
 - **Persistence:** Named volumes at `/home/kasm-user` survive restarts and updates
@@ -46,7 +46,7 @@ To test the full signup flow without deploying:
 # 2. Start the webhook service
 cp .env.example .env
 # Fill in STRIPE_SECRET_KEY, STRIPE_PRICE_ID (test mode keys)
-docker network create clawbot_net
+docker network create openclaw_net
 docker compose -f docker-compose.webhook.yml up --build
 
 # 3. Forward Stripe events to your local webhook
@@ -110,30 +110,30 @@ In the Stripe dashboard, add a webhook endpoint:
 
 ```bash
 # Provision manually
-./scripts/clawbot-admin provision alice
+./scripts/openclaw-admin provision alice
 
 # List all customers
-./scripts/clawbot-admin list
+./scripts/openclaw-admin list
 
 # Check container health
-./scripts/clawbot-admin status
-./scripts/clawbot-admin status alice
+./scripts/openclaw-admin status
+./scripts/openclaw-admin status alice
 
 # Look up a customer record
-./scripts/clawbot-admin db-get alice
+./scripts/openclaw-admin db-get alice
 
 # Deprovision (removes container, volume, DNS)
-./scripts/clawbot-admin deprovision alice
+./scripts/openclaw-admin deprovision alice
 
 # Deprovision but keep data
-./scripts/clawbot-admin deprovision --keep-data alice
+./scripts/openclaw-admin deprovision --keep-data alice
 
 # Back up all customer volumes
-./scripts/clawbot-admin backup
+./scripts/openclaw-admin backup
 
 # Rolling update to a new image
-./scripts/clawbot-admin update
-./scripts/clawbot-admin update clawbot-desktop:v2
+./scripts/openclaw-admin update
+./scripts/openclaw-admin update openclaw-desktop:v2
 ```
 
 ## Admin API
@@ -159,7 +159,7 @@ Automated daily backups via cron:
 
 ```bash
 # Add to crontab
-0 3 * * * /path/to/scripts/backup_all.sh >> /var/log/clawbot-backup.log 2>&1
+0 3 * * * /path/to/scripts/backup_all.sh >> /var/log/openclaw-backup.log 2>&1
 ```
 
 Backups are compressed tarballs stored in `$BACKUP_DIR` (default: `./data/backups/`). Old backups are pruned after `$BACKUP_RETENTION_DAYS` days (default: 7).
@@ -177,7 +177,7 @@ At 2 GB per customer, a 64 GB server supports ~25 concurrent customers.
 ## Project Structure
 
 ```
-├── Dockerfile                    # KasmVNC + ClawBot image
+├── Dockerfile                    # KasmVNC + OpenClaw image
 ├── docker-compose.yml            # Dev/test
 ├── docker-compose.caddy.yml      # Caddy reverse proxy
 ├── docker-compose.webhook.yml    # Stripe webhook service
@@ -187,7 +187,7 @@ At 2 GB per customer, a 64 GB server supports ~25 concurrent customers.
 │   ├── deprovision_customer.sh   # Tear down container + DNS + DB
 │   ├── backup_all.sh             # Volume backups
 │   ├── rolling_update.sh         # Image update across all containers
-│   ├── clawbot-admin             # Admin CLI
+│   ├── openclaw-admin             # Admin CLI
 │   └── lib/
 │       ├── db.sh                 # Customer JSON database helpers
 │       └── cloudflare.sh         # Cloudflare DNS API helpers

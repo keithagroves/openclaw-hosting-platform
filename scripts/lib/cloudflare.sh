@@ -24,7 +24,7 @@ _cf_curl() {
 cf_create_a_record() {
   local subdomain="$1"
   local ip="${2:-${SERVER_IP}}"
-  local base_domain="${BASE_DOMAIN:-reptar.ai}"
+  local base_domain="${BASE_DOMAIN:-example.com}"
   local fqdn="${subdomain}.${base_domain}"
 
   local response
@@ -64,7 +64,7 @@ cf_delete_record() {
 # Usage: cf_get_record_id <subdomain>
 cf_get_record_id() {
   local subdomain="$1"
-  local base_domain="${BASE_DOMAIN:-reptar.ai}"
+  local base_domain="${BASE_DOMAIN:-example.com}"
   local fqdn="${subdomain}.${base_domain}"
 
   local response
@@ -88,7 +88,7 @@ cf_get_record_id() {
 cf_create_access_policy() {
   local subdomain="$1"
   local email="$2"
-  local base_domain="${BASE_DOMAIN:-reptar.ai}"
+  local base_domain="${BASE_DOMAIN:-example.com}"
   local fqdn="${subdomain}.${base_domain}"
   local account_id="${CLOUDFLARE_ACCOUNT_ID}"
 

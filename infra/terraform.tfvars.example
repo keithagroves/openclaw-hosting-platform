@@ -5,7 +5,7 @@ server_location      = "nbg1"    # Nuremberg; alternatives: fsn1, hel1, ash
 ssh_public_key_path  = "~/.ssh/id_ed25519.pub"
 
 # Domain / Cloudflare
-base_domain          = "reptar.ai"
+base_domain          = "example.com"
 cloudflare_api_token = "your-cloudflare-api-token"
 cloudflare_zone_id   = "your-zone-id"
 cloudflare_account_id = "your-account-id"

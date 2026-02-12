@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/db.sh"
 
 IMAGE="${1:-${IMAGE:-clawbot-desktop:latest}}"
-BASE_DOMAIN="${BASE_DOMAIN:-reptar.ai}"
+BASE_DOMAIN="${BASE_DOMAIN:-example.com}"
 NETWORK="${NETWORK:-clawbot_net}"
 CPUS="${CPUS:-1}"
 MEMORY="${MEMORY:-2g}"

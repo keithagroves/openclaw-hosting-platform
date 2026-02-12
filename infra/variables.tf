@@ -43,11 +43,17 @@ variable "cloudflare_account_id" {
 }
 
 variable "base_domain" {
-  description = "Base domain for the platform (e.g. reptar.ai)"
+  description = "Base domain for the platform (e.g. example.com)"
   type        = string
 }
 
 # ── App Config ────────────────────────────────────────────────────────────────
+
+variable "repo_url" {
+  description = "Git repository URL to clone onto the server"
+  type        = string
+  default     = "https://github.com/keithgroves/clawbot-hosting.git"
+}
 
 variable "admin_api_key" {
   description = "API key for admin endpoints (auto-generated if empty)"

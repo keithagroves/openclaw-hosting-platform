@@ -96,10 +96,10 @@ CRON
 
 echo ""
 echo "==> Setup complete!"
-echo "    Admin panel: https://admin.${BASE_DOMAIN:-reptar.ai}"
+echo "    Admin panel: https://admin.${BASE_DOMAIN:-example.com}"
 echo "    SSH:         ssh root@$(grep '^SERVER_IP=' "$ENV_FILE" | cut -d= -f2)"
 echo ""
 echo "    Next steps:"
 echo "    1. Set STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_ID in $ENV_FILE"
 echo "    2. Restart webhook: cd /opt/clawbot && docker compose -f docker-compose.webhook.yml --env-file .env up -d"
-echo "    3. Configure Stripe webhook endpoint: https://admin.${BASE_DOMAIN:-reptar.ai}/webhook"
+echo "    3. Configure Stripe webhook endpoint: https://admin.${BASE_DOMAIN:-example.com}/webhook"

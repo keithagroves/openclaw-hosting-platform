@@ -49,6 +49,7 @@ resource "hcloud_server" "clawbot" {
     cloudflare_zone_id    = var.cloudflare_zone_id
     cloudflare_account_id = var.cloudflare_account_id
     admin_api_key         = local.admin_api_key
+    repo_url              = var.repo_url
     server_ip             = "" # Filled post-creation by server_setup.sh
   })
 

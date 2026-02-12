@@ -29,7 +29,7 @@ if [ -z "$SUBDOMAIN" ]; then
   echo "Generated subdomain: ${SUBDOMAIN}"
 fi
 
-BASE_DOMAIN="${BASE_DOMAIN:-reptar.ai}"
+BASE_DOMAIN="${BASE_DOMAIN:-example.com}"
 IMAGE="${IMAGE:-clawbot-desktop:latest}"
 NETWORK="${NETWORK:-clawbot_net}"
 CPUS="${CPUS:-1}"

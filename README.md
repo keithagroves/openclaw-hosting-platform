@@ -12,9 +12,9 @@ Customer browser
     ▼
 Caddy (HTTPS, auto-certs)
     │
-    ├── alice.reptar.ai  →  clawbot-alice:6901
-    ├── bob.reptar.ai    →  clawbot-bob:6901
-    └── admin.reptar.ai  →  clawbot-webhook:5000
+    ├── alice.example.com  →  clawbot-alice:6901
+    ├── bob.example.com    →  clawbot-bob:6901
+    └── admin.example.com  →  clawbot-webhook:5000
 ```
 
 - **Base image:** KasmVNC Ubuntu desktop + ClawBot (`Dockerfile`)
@@ -101,7 +101,7 @@ In the Stripe dashboard, add a webhook endpoint:
 
 | Event | What Happens |
 |-------|-------------|
-| Customer signs up at `admin.reptar.ai` | Picks subdomain → Stripe Checkout |
+| Customer signs up at `admin.example.com` | Picks subdomain → Stripe Checkout |
 | Payment succeeds | Webhook provisions container + DNS + DB record |
 | Customer cancels subscription | Webhook deprovisions container + DNS cleanup |
 | Payment fails | Status updated in DB, container stays running |
@@ -142,15 +142,15 @@ The webhook service exposes authenticated endpoints at `admin.<your-domain>`:
 
 ```bash
 # List customers
-curl -H "Authorization: Bearer $ADMIN_API_KEY" https://admin.reptar.ai/admin/customers
+curl -H "Authorization: Bearer $ADMIN_API_KEY" https://admin.example.com/admin/customers
 
 # Provision via API
 curl -X POST -H "Authorization: Bearer $ADMIN_API_KEY" \
-  -d '{"subdomain":"alice"}' https://admin.reptar.ai/admin/provision
+  -d '{"subdomain":"alice"}' https://admin.example.com/admin/provision
 
 # Deprovision via API
 curl -X POST -H "Authorization: Bearer $ADMIN_API_KEY" \
-  -d '{"subdomain":"alice"}' https://admin.reptar.ai/admin/deprovision
+  -d '{"subdomain":"alice"}' https://admin.example.com/admin/deprovision
 ```
 
 ## Backups

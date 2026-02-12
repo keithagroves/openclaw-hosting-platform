@@ -44,7 +44,7 @@ runcmd:
   - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
   # ── Clone repo ───────────────────────────────────────────────────────────────
-  - git clone https://github.com/keithgroves/clawbot-hosting.git /opt/clawbot/repo
+  - git clone ${repo_url} /opt/clawbot/repo
   - ln -sf /opt/clawbot/repo/scripts /opt/clawbot/scripts
   - ln -sf /opt/clawbot/repo/webhook /opt/clawbot/webhook
   - ln -sf /opt/clawbot/repo/docker-compose.caddy.yml /opt/clawbot/docker-compose.caddy.yml

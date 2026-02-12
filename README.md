@@ -2,6 +2,8 @@
 
 Browser-accessible cloud desktops with ClawBot pre-installed. Each customer gets an isolated KasmVNC container behind HTTPS, provisioned automatically via Stripe.
 
+![ClawBot Desktop](screenshot.png)
+
 ## Architecture
 
 ```
@@ -21,7 +23,41 @@ Caddy (HTTPS, auto-certs)
 - **Persistence:** Named volumes at `/home/kasm-user` survive restarts and updates
 - **Billing:** Stripe Checkout → webhook → auto-provision/deprovision
 
-## Quick Start
+## Local Development
+
+Run a single desktop container locally — no Stripe, Cloudflare, or domain needed.
+
+```bash
+# Build and start
+docker compose up --build
+
+# Open in browser
+open http://localhost:6901
+```
+
+Log in with password `changeme`. This uses `docker-compose.yml` which runs one container with ports exposed directly.
+
+### Testing the webhook service locally
+
+To test the full signup flow without deploying:
+
+```bash
+# 1. Install the Stripe CLI: https://docs.stripe.com/stripe-cli
+# 2. Start the webhook service
+cp .env.example .env
+# Fill in STRIPE_SECRET_KEY, STRIPE_PRICE_ID (test mode keys)
+docker network create clawbot_net
+docker compose -f docker-compose.webhook.yml up --build
+
+# 3. Forward Stripe events to your local webhook
+stripe listen --forward-to localhost:5000/webhook
+# Copy the webhook signing secret (whsec_...) into .env as STRIPE_WEBHOOK_SECRET
+# Restart the webhook service
+
+# 4. Open http://localhost:5000 and test the checkout flow
+```
+
+## Production Deployment
 
 ### Prerequisites
 

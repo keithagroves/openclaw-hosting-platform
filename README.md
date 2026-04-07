@@ -35,7 +35,7 @@ docker compose up --build
 open http://localhost:6901
 ```
 
-Log in with password `changeme`. This uses `docker-compose.yml` which runs one container with ports exposed directly.
+Log in with username `kasm_user` and password `changeme`. This uses `docker-compose.yml` which runs one container with ports exposed directly.
 
 ### Testing the webhook service locally
 
